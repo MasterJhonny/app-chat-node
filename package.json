@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Jhonny Callisaya <jhonnyeddy.22@gmail.com>",
@@ -19,5 +20,8 @@
     "mongoose": "^6.0.13",
     "multer": "^1.4.3",
     "socket.io": "^4.4.0"
+  },
+  "engines": {
+    "node": "17.x"
   }
 }
