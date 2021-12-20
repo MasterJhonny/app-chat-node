@@ -9,7 +9,7 @@ const controler = new controlerMessage();
 
 //instance of multer
 const upload = multer({
-  dest: 'public/'
+  dest: 'public/files/'
 })
 
 router.get('/', async (req, res, next) => {
@@ -43,7 +43,7 @@ router.post('/',
   async (req, res, next) => {
     try {
       const data = req.body;
-      const addMessage = await controler.addMessage(data);
+      const addMessage = await controler.addMessage(data, req.file);
       res.status(201).json(addMessage);
     } catch (error) {
       next(error);

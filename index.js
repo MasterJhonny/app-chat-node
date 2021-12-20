@@ -1,42 +1,57 @@
+// import packege express incialization server
 const express = require('express');
-const router = express.Router();
-
+const config = require('./config');
+// import corss
+const cors = require('cors');
 const app = express();
+const server = require('http').Server(app);
+const port = config.port;
+const host = config.host;
+
+
+// import socket
+const socket = require('./socket');
+// import apirouter
+const routerApi = require('./router/index');
+// import function error handlers
+const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
+const { SocketAddress } = require('net');
+const { Socket } = require('socket.io');
+
+
+// run use corss
+app.use(cors());
+// for read the body in json format
 app.use(express.json());
-app.use(router);
+// conction socket
+socket.connect(server);
+// run ruoters
+routerApi(app);
 
-router.get('/message', (req, res) => {
-    // console.log(req.query);
-    const header = req.headers;
-    console.log(header);
-    res.header({
-        "Otro-message":'Hola Mundillo feliz, sean muy felices',
-        "Otro-cosa":'Estamos felices gracias a Dios',
-        "Otro-message2":'A toda por la situacion'
+// use function error
+app.use(logErrors);
+app.use(boomErrorHandler);
+app.use(errorHandler);
+
+// for server file static, ponemos the name of file como argunmento
+app.use('/app', express.static('public'));
+
+
+socket.socket.io.on('connection', (sokt) => {
+
+  sokt.on('init', (data) => {
+    sokt.broadcast.emit('en:linea', {
+      status: 'en linea',
+      data: data
     });
-    res.send('list message');
+  })
+
+  sokt.on('typing', (data) => {
+    sokt.broadcast.emit('typing', data);
+  })
 })
 
-router.post('/message', (req, res) => {
-    const body = req.body;
-    res.status(201).json([
-        {
-            name:'Carlos',
-            message: 'hola como estas'
-        },
-        {
-            name:'Carlos',
-            message: 'hola como estas'
-        },
-        {
-            name:'Juan',
-            message: 'hola como estas'
-        }
-    ]);
-})
 
-router.use('/app', express.static('public'));
-
-app.listen(3000, () => {
-    console.log(`run http://localhost:3000`)
+server.listen(port, () => {
+    console.log(`run http://${host}:${port}`)
 })

@@ -9,6 +9,7 @@ const createUsserSchema = Joi.object({
 
 const updateUserSchema = Joi.object({
   name: name,
+  id_chat: id,
 })
 
 const getUserSchema = Joi.object({

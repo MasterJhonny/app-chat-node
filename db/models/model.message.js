@@ -15,6 +15,8 @@ const schemaMessages = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'chats',
   },
+  destUserId: String,
+  fileUrl: String,
   date: Date,
 });
 

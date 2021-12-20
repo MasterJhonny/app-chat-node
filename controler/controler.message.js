@@ -1,5 +1,7 @@
 const moment = require('moment');
 const boom = require('@hapi/boom');
+const config = require('../config');
+const socket = require('../socket').socket;
 const { ModelMessage } = require('../db/models');
 
 class MessageControler {
@@ -8,14 +10,21 @@ class MessageControler {
 
   }
 
-  async addMessage (data) {
+  async addMessage (data, file) {
     if(!data) throw new Error('Ups sucedio un error');
+    let fileUrl = '';
+    if(file){
+      fileUrl = `http://${config.host}:${config.port}/app/files/${file.filename}`;
+    }
     const fullMessage = {
       ...data,
+      file: fileUrl,
       date: moment().format('YYYY-MM-DD HH:mm:ss')
     }
     const myMessage = new ModelMessage(fullMessage);
-    await myMessage.save();
+    const fana = await myMessage.save();
+    const msgEmit = await this.getMessage(fana._id)
+    socket.io.emit('message', msgEmit);
     return fullMessage;
   }
 
@@ -28,7 +37,7 @@ class MessageControler {
   }
 
   async getMessage (id) {
-    const message = await ModelMessage.findById(id);
+    const message = await ModelMessage.findById(id).populate('user').exec();
     if(!message){
       throw boom.notFound('Ups, not found');
     }

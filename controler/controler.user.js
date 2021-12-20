@@ -34,17 +34,10 @@ class UserControler {
     if(!id || !changes) {
       throw boom.badRequest('Invalid data');
     }
-    let updateUser = await ModelUser.findById(id);
+    let updateUser = await ModelUser.findByIdAndUpdate(id, changes);
     if(!updateUser) {
       throw boom.notFound('Ups, not found');
     }
-    console.log(updateUser, '<=')
-    // updateUser = {
-    //   ...updateUser,
-    //   ...changes
-    // }
-    updateUser.name = changes.name;
-    updateUser.save();
     return updateUser;
   }
 

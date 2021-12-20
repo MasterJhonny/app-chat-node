@@ -1,4 +1,4 @@
-require('dotenv').config();
+const config = require('../../config');
 
 const mongoose = require('mongoose');
 const db = require('mongoose');
@@ -13,8 +13,7 @@ const ModelMessage = mongoose.model('messages', schemaMessages);
 const ModelUser = mongoose.model('users', schemaUsers);
 const ModelChat = mongoose.model('chats', schemaChats);
 
-const user = process.env.DB_USER;
-const password = process.env.DB_PASSWORD;
+const { user, password } = config;
 
 const URI = `mongodb+srv://${user}:${password}@cluster0.i9d9d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 

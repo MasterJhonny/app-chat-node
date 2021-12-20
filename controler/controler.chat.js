@@ -23,7 +23,7 @@ class ChatControler {
   }
 
   async getChat (id) {
-    const chat = await ModelChat.find({ users: id }).populate('users').exec();
+    const chat = await ModelChat.find({ users: id });
     if(!chat){
       throw boom.notFound('Ups, not found');
     }

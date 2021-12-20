@@ -57,7 +57,7 @@ router.post('/',
 
 router.patch('/:id',
   validateHandler(getUserSchema, 'params'),
-  validateHandler(createUsserSchema, 'body'),
+  validateHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const id = req.params.id;
